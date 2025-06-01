@@ -21,7 +21,7 @@ class ConfigManager:
     def __init__(self):
         self.config_file: str = "papier_prijzen.json"
 
-    def load_prijzen(self):
+    def load_prijzen(self)->dict[str, float]:
         try:
             if os.path.exists(self.config_file):
                 with open(self.config_file, 'r') as f:
@@ -30,7 +30,7 @@ class ConfigManager:
         except ValueError:
             return DEFAULT_PRIJZEN
 
-    def save_prijzen(self, prijzen):
+    def save_prijzen(self, prijzen)->bool:
         try:
             with open(self.config_file, 'w') as f:
                 json.dump(prijzen, f, indent=4)

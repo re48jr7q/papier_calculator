@@ -153,7 +153,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.resultaat_berekening)
 
         #bereken het resultaat van de invoer
-    def bereken(self):
+    def bereken(self)->None:
         try:
             #controleren of het veld leeg is
             if not self.number.text():
@@ -171,7 +171,7 @@ class MainWindow(QMainWindow):
             self.resultaat_berekening.setText("geen goede invoer")
 
 
-    def toon_prijzen_dialog(self):
+    def toon_prijzen_dialog(self)->None:
         dialog = PrijsAanpassenDialog(self.papier_prijzen, self)
         if dialog.exec() == QDialog.Accepted:
             self.papier_prijzen = dialog.get_nieuwe_prijzen()
