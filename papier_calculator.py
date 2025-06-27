@@ -1,4 +1,4 @@
-__version__ = "0u.1.0"
+__version__ = "0u.1.1"
 import sys
 from PySide6.QtCore import Qt, QLocale
 
@@ -179,7 +179,7 @@ class MainWindow(QMainWindow):
             self.config_manager.save_prijzen(self.papier_prijzen)
             self.bereken()
 
-if __name__ == "__main__":
+def main():
     app = QApplication(sys.argv)
     app.setStyle('Fusion')
     app.setPalette(QPalette(QColor("#fce3c3")))
@@ -187,3 +187,6 @@ if __name__ == "__main__":
     window = MainWindow()
     window.show()
     sys.exit(app.exec())
+
+if __name__ == "__main__":
+    main()
