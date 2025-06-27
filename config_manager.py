@@ -1,5 +1,7 @@
+__version__ = "0.1.1"
+
 import json
-import os
+from pathlib import Path
 
 DEFAULT_PRIJZEN = {
     "preprint 80": 0.0150,
@@ -17,23 +19,36 @@ DEFAULT_PRIJZEN = {
     "biotop 300": 0.0280,
 }
 
+
 class ConfigManager:
     def __init__(self):
-        self.config_file: str = "papier_prijzen.json"
+        self.config_file = Path("../../papier_prijzen.json").resolve()
 
-    def load_prijzen(self)->dict[str, float]:
+    def load_prijzen(self) -> dict[str, float]:
         try:
-            if os.path.exists(self.config_file):
-                with open(self.config_file, 'r') as f:
-                    return json.load(f)
+            if self.config_file.exists():
+                with open(self.config_file, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    return {str(k): float(v) for k, v in data.items()}
             return DEFAULT_PRIJZEN
-        except ValueError:
+        except (ValueError, json.JSONDecodeError, OSError):
             return DEFAULT_PRIJZEN
 
-    def save_prijzen(self, prijzen)->bool:
+    def save_prijzen(self, prijzen: dict) -> bool:
+
         try:
-            with open(self.config_file, 'w') as f:
+            # Maak backup van bestaand bestand
+            if self.config_file.exists():
+                backup_file = self.config_file.with_suffix('.json.bak')
+                self.config_file.rename(backup_file)
+
+            # Schrijf nieuwe data
+            with open(self.config_file, 'w', encoding='utf-8') as f:
                 json.dump(prijzen, f, indent=4)
             return True
-        except ValueError:
+        except (OSError, TypeError, ValueError):
+            # Herstel backup bij fout
+            if 'backup_file' in locals():
+                backup_file.rename(self.config_file)
             return False
+
